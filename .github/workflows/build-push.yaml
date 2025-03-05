@@ -35,4 +35,5 @@ jobs:
 
       - name: Deploy to ECS
         run: |
-          aws ecs update-service --cluster demo-app-cluster --service demo-app-service --force-new-deployment
+          aws ecs update-service --cluster candidate-app-cluster --service candidate-app-backend-service --force-new-deployment
+          aws ecs update-service --cluster candidate-app-cluster --service candidate-app-frontend-service --force-new-deployment
