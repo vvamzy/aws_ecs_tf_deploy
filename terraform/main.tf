@@ -237,6 +237,7 @@ resource "aws_ecs_service" "frontend" {
   network_configuration {
     subnets         = aws_subnet.public[*].id
     security_groups = [aws_security_group.ecs.id]
+    assign_public_ip = true
   }
 
   load_balancer {
