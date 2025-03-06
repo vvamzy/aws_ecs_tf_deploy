@@ -23,14 +23,20 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Build and push backend image
+      - name: Build backend image
+        run: make build-backend
+
+      - name: Push backend image
         run: |
-          docker build -t ${{ secrets.ECR_BACKEND_REPO }} ./backend
+          docker tag backend ${{ secrets.ECR_BACKEND_REPO }}:latest
           docker push ${{ secrets.ECR_BACKEND_REPO }}:latest
 
-      - name: Build and push frontend image
+      - name: Build frontend image
+        run: make build-frontend
+
+      - name: Push frontend image
         run: |
-          docker build -t ${{ secrets.ECR_FRONTEND_REPO }} ./frontend
+          docker tag frontend ${{ secrets.ECR_FRONTEND_REPO }}:latest
           docker push ${{ secrets.ECR_FRONTEND_REPO }}:latest
 
       - name: Deploy to ECS

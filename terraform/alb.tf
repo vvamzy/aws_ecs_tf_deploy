@@ -8,19 +8,19 @@ resource "aws_lb" "main" {
 }
 
 resource "aws_lb_target_group" "frontend" {
-  name     = "${var.app_name}-frontend-tg"
-  port     = 80
-  protocol = "HTTP"
+  name        = "${var.app_name}-frontend-tg"
+  port        = 80
+  protocol    = "HTTP"
   target_type = "ip"
-  vpc_id   = aws_vpc.main.id
+  vpc_id      = aws_vpc.main.id
 }
 
 resource "aws_lb_target_group" "backend" {
-  name     = "${var.app_name}-backend-tg"
-  port     = 5000
-  protocol = "HTTP"
+  name        = "${var.app_name}-backend-tg"
+  port        = 5000
+  protocol    = "HTTP"
   target_type = "ip"
-  vpc_id   = aws_vpc.main.id
+  vpc_id      = aws_vpc.main.id
 }
 
 resource "aws_lb_listener" "frontend" {

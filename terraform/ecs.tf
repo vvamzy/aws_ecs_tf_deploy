@@ -34,7 +34,7 @@ resource "aws_ecs_task_definition" "frontend" {
   cpu                      = "256"
   memory                   = "512"
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
-  container_definitions    = jsonencode([{
+  container_definitions = jsonencode([{
     name      = "frontend"
     image     = aws_ecr_repository.frontend.repository_url
     cpu       = 256
@@ -44,6 +44,14 @@ resource "aws_ecs_task_definition" "frontend" {
       containerPort = 80
       hostPort      = 80
     }]
+    logConfiguration = {
+      logDriver = "awslogs"
+      options = {
+        awslogs-group         = "/ecs/demo-app-frontend"
+        awslogs-region        = "ap-south-1"
+        awslogs-stream-prefix = "ecs"
+      }
+    }
   }])
 }
 
@@ -54,7 +62,7 @@ resource "aws_ecs_task_definition" "backend" {
   cpu                      = "256"
   memory                   = "512"
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
-  container_definitions    = jsonencode([{
+  container_definitions = jsonencode([{
     name      = "backend"
     image     = aws_ecr_repository.backend.repository_url
     cpu       = 256
@@ -69,7 +77,16 @@ resource "aws_ecs_task_definition" "backend" {
     portMappings = [{
       containerPort = 5000
       hostPort      = 5000
-    }]
+      }
+    ]
+    logConfiguration = {
+      logDriver = "awslogs"
+      options = {
+        awslogs-group         = "/ecs/demo-app-backend"
+        awslogs-region        = "ap-south-1"
+        awslogs-stream-prefix = "ecs"
+      }
+    }
   }])
 }
 # Create ECS Services
@@ -81,8 +98,8 @@ resource "aws_ecs_service" "frontend" {
   launch_type     = "FARGATE"
 
   network_configuration {
-    subnets         = aws_subnet.public[*].id
-    security_groups = [aws_security_group.ecs.id]
+    subnets          = aws_subnet.public[*].id
+    security_groups  = [aws_security_group.ecs.id]
     assign_public_ip = true
   }
 
@@ -101,8 +118,8 @@ resource "aws_ecs_service" "backend" {
   launch_type     = "FARGATE"
 
   network_configuration {
-    subnets         = aws_subnet.public[*].id
-    security_groups = [aws_security_group.ecs.id]
+    subnets          = aws_subnet.public[*].id
+    security_groups  = [aws_security_group.ecs.id]
     assign_public_ip = true
   }
 
